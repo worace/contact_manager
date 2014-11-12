@@ -1,16 +1,5 @@
 class PhoneNumbersController < ApplicationController
-  before_action :set_phone_number, only: [:show, :edit, :update, :destroy]
-
-  # GET /phone_numbers
-  # GET /phone_numbers.json
-  def index
-    @phone_numbers = PhoneNumber.all
-  end
-
-  # GET /phone_numbers/1
-  # GET /phone_numbers/1.json
-  def show
-  end
+  before_action :set_phone_number, only: [:edit, :update, :destroy]
 
   # GET /phone_numbers/new
   def new
