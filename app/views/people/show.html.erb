@@ -10,19 +10,8 @@
   <%= @person.last_name %>
 </p>
 
-<div>
-  <h4>phone numbers</h4>
-<ul>
-  <% @person.phone_numbers.each do |phone_number| %>
-    <li>
-      <span><%= phone_number.number %></span>
-      <span><%= link_to('edit', edit_phone_number_path(phone_number)) %></span>
-      <span><%= link_to('delete', phone_number_path(phone_number), :method => "delete") %></span>
-    </li>
-  <% end %>
-</ul>
+<%= render 'phone_numbers/phone_numbers', :phone_numbers => @person.phone_numbers %>
 <p><%= link_to "Add a phone number", new_phone_number_path(contact_id: @person.id, contact_type: "Person") %></p>
-</div>
 
 <div>
   <h4>emails</h4>
