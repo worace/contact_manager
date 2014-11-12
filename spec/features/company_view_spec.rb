@@ -60,4 +60,71 @@ describe 'the company view', type: :feature do
       expect(page).to_not have_content("555-1234")
     end
   end
+
+  describe "email addresses" do
+    before do
+      company.email_addresses.create(address: "work@example.com")
+      company.email_addresses.create(address: "home@example.com")
+      visit company_path(company)
+    end
+
+    it "shows the emails in a list" do
+      company.email_addresses.each do |addr|
+        expect(page).to have_selector('li span', text: addr.address)
+      end
+    end
+
+    it 'has a link to add a new email' do
+      expect(page).to have_link('Add an email', href: new_email_address_path(contact_id: company.id, contact_type: "Company"))
+    end
+
+    it 'adds an email' do
+      page.click_link('Add an email address')
+      page.fill_in('Address', with: 'pizzaman@pizza.com')
+      page.click_button('Create Email address')
+      expect(current_path).to eq(company_path(company))
+      expect(page).to have_content('pizzaman@pizza.com')
+    end
+
+    it "hides the company id field in the email form" do
+      expect(page).to have_link('Add an email address', href: new_email_address_path(contact_id: company.id, contact_type: "Company"))
+      page.click_link('Add an email address')
+      uri = URI.parse(current_url)
+      expect("#{uri.path}?#{uri.query}").to eq(new_email_address_path(contact_id: company.id, contact_type: "Company"))
+      expect(page).to have_selector("input#email_address_contact_id[type=hidden]")
+    end
+
+    it "has links to edit emails" do
+      company.email_addresses.each do |addr|
+        expect(page).to have_link('edit', href: edit_email_address_path(addr))
+      end
+    end
+
+    it "edits an email" do
+      email = company.email_addresses.first
+      old_addr = email.address
+
+      first("ul#emails a").click
+      page.fill_in('Address', with: 'newemailforme@example.com')
+      page.click_button('Update Email address')
+      expect(current_path).to eq(company_path(company))
+      expect(page).to have_content('newemailforme@example.com')
+      expect(page).to_not have_content(old_addr)
+    end
+
+    it "has links do delete emails" do
+      company.email_addresses.each do |addr|
+        expect(page).to have_link('delete', href: email_address_path(addr))
+      end
+    end
+
+    it "deletes an email" do
+      to_delete = company.email_addresses.first
+      not_to_delete = company.email_addresses.last
+      first("ul#emails a.delete-email").click
+      expect(current_path).to eq(company_path(company))
+      expect(page).to have_content(not_to_delete.address)
+      expect(page).to_not have_content(to_delete.address)
+    end
+  end
 end
