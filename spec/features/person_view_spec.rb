@@ -1,3 +1,4 @@
+require 'rails_helper'
 require 'spec_helper'
 require 'capybara/rails'
 require 'capybara/rspec'
@@ -19,13 +20,14 @@ describe 'the person view', type: :feature do
     end
 
     it 'has a link to add a new phone number' do
-      expect(page).to have_link('Add a phone number', href: new_phone_number_path(person_id: person.id))
+      expect(page).to have_link('Add a phone number', href: new_phone_number_path(contact_id: person.id, contact_type: "Person"))
     end
 
     it 'adds a phone number' do
       page.click_link('Add a phone number')
       page.fill_in('Number', with: '555-8888')
       page.click_button('Create Phone number')
+      expect(PhoneNumber.count).to eq(3)
       expect(current_path).to eq(person_path(person))
       expect(page).to have_content('555-8888')
     end
