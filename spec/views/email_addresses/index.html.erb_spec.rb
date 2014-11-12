@@ -4,11 +4,13 @@ RSpec.describe "email_addresses/index", :type => :view do
   before(:each) do
     assign(:email_addresses, [
       EmailAddress.create!(
-        :person_id => 1,
+        :contact_id => 1,
+        :contact_type => "Person",
         :address => "Address"
       ),
       EmailAddress.create!(
-        :person_id => 1,
+        :contact_id => 1,
+        :contact_type => "Person",
         :address => "Address"
       )
     ])

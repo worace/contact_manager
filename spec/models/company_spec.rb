@@ -20,4 +20,13 @@ RSpec.describe Company, :type => :model do
     phone_number = company.phone_numbers.build(number: "333-4444")
     expect(phone_number.number).to eq('333-4444')
   end
+
+  it 'responds with its created email addresses' do
+    company.email_addresses.build(address: 'me@example.com')
+    expect(company.email_addresses.map(&:address)).to eq(['me@example.com'])
+  end
+
+  it "has an array of email addresses" do
+    expect(company.email_addresses).to eq([])
+  end
 end

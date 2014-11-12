@@ -2,12 +2,13 @@ require 'rails_helper'
 
 RSpec.describe EmailAddressesController, :type => :controller do
   let(:person) { Person.create(first_name: "horace", last_name: "worace") }
+  let(:company) { Company.create(:name => "Shinra Corp") }
   let(:valid_attributes) {
-    {address: "worace@worace.com", person_id: person.id}
+    {address: "worace@worace.com", contact_id: person.id, contact_type: "Person"}
   }
 
   let(:invalid_attributes) {
-    {address: nil, person_id: person.id}
+    {address: nil, contact_type: nil, contact_id: nil}
   }
 
   # This should return the minimal set of values that should be in the session
@@ -37,9 +38,10 @@ RSpec.describe EmailAddressesController, :type => :controller do
       expect(assigns(:email_address)).to be_a_new(EmailAddress)
     end
 
-    it "links the email address to a person_id provided in the url" do
-      get :new, {:person_id => person.id}, valid_session
-      expect(assigns(:email_address).person_id).to eq(person.id)
+    it "links the email address to a contact_id and type provided in the url" do
+      get :new, {:contact_id => person.id, :contact_type => "Person"}, valid_session
+      expect(assigns(:email_address).contact_id).to eq(person.id)
+      expect(assigns(:email_address).contact_type).to eq("Person")
     end
   end
 
@@ -67,7 +69,7 @@ RSpec.describe EmailAddressesController, :type => :controller do
 
       it "redirects to the address's person" do
         post :create, {:email_address => valid_attributes}, valid_session
-        expect(response).to redirect_to(EmailAddress.last.person)
+        expect(response).to redirect_to(EmailAddress.last.contact)
       end
     end
 
@@ -87,7 +89,7 @@ RSpec.describe EmailAddressesController, :type => :controller do
   describe "PUT update" do
     describe "with valid params" do
       let(:new_attributes) {
-        {:address => "new@new.com", :person_id => person.id}
+        {:address => "new@new.com", :contact_id => person.id, :contact_type => "Person"}
       }
 
       it "updates the requested email_address" do
@@ -105,7 +107,7 @@ RSpec.describe EmailAddressesController, :type => :controller do
       it "redirects to the email_address's owner" do
         email_address = EmailAddress.create! valid_attributes
         put :update, {:id => email_address.to_param, :email_address => valid_attributes}, valid_session
-        expect(response).to redirect_to(email_address.person)
+        expect(response).to redirect_to(email_address.contact)
       end
     end
 
@@ -135,7 +137,7 @@ RSpec.describe EmailAddressesController, :type => :controller do
     it "redirects to the email_addresses list" do
       email_address = EmailAddress.create! valid_attributes
       delete :destroy, {:id => email_address.to_param}, valid_session
-      expect(response).to redirect_to(email_address.person)
+      expect(response).to redirect_to(email_address.contact)
     end
   end
 end

@@ -75,7 +75,7 @@ describe 'the person view', type: :feature do
     end
 
     it 'has a link to add a new email' do
-      expect(page).to have_link('Add an email', href: new_email_address_path(person_id: person.id))
+      expect(page).to have_link('Add an email', href: new_email_address_path(contact_id: person.id, contact_type: "Person"))
     end
 
     it 'adds an email' do
@@ -87,11 +87,11 @@ describe 'the person view', type: :feature do
     end
 
     it "hides the person id field in the email form" do
-      expect(page).to have_link('Add an email address', href: new_email_address_path(person_id: person.id))
+      expect(page).to have_link('Add an email address', href: new_email_address_path(contact_id: person.id, contact_type: "Person"))
       page.click_link('Add an email address')
       uri = URI.parse(current_url)
-      expect("#{uri.path}?#{uri.query}").to eq(new_email_address_path(person_id: person.id))
-      expect(page).to have_selector("input#email_address_person_id[type=hidden]")
+      expect("#{uri.path}?#{uri.query}").to eq(new_email_address_path(contact_id: person.id, contact_type: "Person"))
+      expect(page).to have_selector("input#email_address_contact_id[type=hidden]")
     end
 
     it "has links to edit emails" do
