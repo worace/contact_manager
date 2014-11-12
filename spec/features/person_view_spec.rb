@@ -1,7 +1,4 @@
 require 'rails_helper'
-require 'spec_helper'
-require 'capybara/rails'
-require 'capybara/rspec'
 
 describe 'the person view', type: :feature do
   let(:person) { Person.create(first_name: 'John', last_name: 'Doe') }
