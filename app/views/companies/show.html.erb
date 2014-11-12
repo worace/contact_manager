@@ -8,19 +8,8 @@
 <%= render 'phone_numbers/phone_numbers', :phone_numbers => @company.phone_numbers %>
 <p><%= link_to "Add a phone number", new_phone_number_path(contact_id: @company.id, contact_type: "Company") %></p>
 
-<div>
-  <h4>emails</h4>
-<ul id="emails">
-  <% @company.email_addresses.each do |addr| %>
-    <li>
-      <span><%= addr.address %></span>
-      <span><%= link_to('edit', edit_email_address_path(addr)) %></span>
-      <span><%= link_to('delete', email_address_path(addr), :method => "delete", :class => "delete-email") %></span>
-    </li>
-  <% end %>
-</ul>
+<%= render 'email_addresses/email_addresses', :email_addresses => @company.email_addresses %>
 <p><%= link_to "Add an email address", new_email_address_path(contact_id: @company.id, contact_type: "Company") %></p>
-</div>
 
 <%= link_to 'Edit', edit_company_path(@company) %> |
 <%= link_to 'Back', companies_path %>
